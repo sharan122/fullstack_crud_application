@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../App'; 
 
 const Login = () => {
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { login } = useContext(UserContext); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,8 +17,15 @@ const Login = () => {
     try {
       const response = await axios.post('http://127.0.0.1:8000/login', { email, password });
       console.log(response.data);
+      
+      // Get the user data and token from response
+      const { user, token } = response.data;
+
+      // Update the context with user data and token
+      login(user, token);
+
       alert('Login Successful');
-      navigate('/home')
+      navigate('/home');
     } catch (err) {
       setError('Invalid credentials');
     }
