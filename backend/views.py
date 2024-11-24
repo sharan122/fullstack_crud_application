@@ -115,3 +115,15 @@ def logout_user(request):
     # Delete the user's token to log them out
     request.user.auth_token.delete()
     return Response({"message": "Successfully logged out."}, status=200)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def block_user(request):
+    user = request.user  
+    user.is_active = not user.is_active
+    user.save()
+    status_message = 'blocked' if not user.is_active else 'unblocked'
+    return Response(
+        {'message': f'User successfully {status_message}.'},
+        status=status.HTTP_200_OK
+    )
