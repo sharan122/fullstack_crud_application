@@ -31,13 +31,15 @@ def login_view(request):
     print(password)
 
     user = authenticate(request, username=username, password=password)
-    print(user)
+    print(user.username,user.email)
 
     if user is not None:
         refresh = RefreshToken.for_user(user)
         return Response({
             'access': str(refresh.access_token),
             'refresh': str(refresh),
+            'user':user.username,
+            'is_staff':user.is_staff
         }, status=status.HTTP_200_OK)
     else:
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
