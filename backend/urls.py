@@ -15,4 +15,5 @@ urlpatterns = [
     path('add-user/', add_user, name='add-user'),
     path('delete-user/<int:user_id>/', delete_user, name='delete_user'),
     path('edit-profile/',edit_profile, name='edit_profile'),
+    path('api/logout/', logout_user, name='logout'),
 ]

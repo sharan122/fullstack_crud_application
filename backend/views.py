@@ -107,3 +107,11 @@ def edit_profile(request):
         return Response({'message': 'Profile updated successfully!', 'user': serializer.data}, status=status.HTTP_200_OK)
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def logout_user(request):
+    # Delete the user's token to log them out
+    request.user.auth_token.delete()
+    return Response({"message": "Successfully logged out."}, status=200)
