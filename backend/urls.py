@@ -11,4 +11,8 @@ urlpatterns = [
     path('register/', register_user),
     path('login/', login_view, name='login'),
     path('user/', user_details_view, name='user-details'),
+    path('users-list/',user_list,name = 'user-list'),
+    path('add-user/', add_user, name='add-user'),
+    path('delete-user/<int:user_id>/', delete_user, name='delete_user'),
+    path('edit-profile/',edit_profile, name='edit_profile'),
 ]
