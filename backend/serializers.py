@@ -6,7 +6,18 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Customuser
-        fields = ['username', 'email', 'password', 'image', 'phone_number']
+        fields = ['username', 'email', 'password', 'image', 'phone_number','id', "is_staff" ,"is_active"]
+        
+        
+    def validate_password(self, value):
+        if len(value) < 8:
+            raise serializers.ValidationError("Password must be at least 8 characters long.")
+        return value
+
+    def validate_email(self, value):
+        if Customuser.objects.filter(email=value).exists():
+            raise serializers.ValidationError("A user with this email already exists.")
+        return value
 
     def create(self, validated_data):
         user = Customuser.objects.create_user(
@@ -19,3 +30,16 @@ class CustomUserSerializer(serializers.ModelSerializer):
         user.image = validated_data.get('image', None)
         user.save()
         return user
+    
+    def update(self, instance, validated_data):
+        """Update user profile"""
+        # Extract password if provided and hash it
+        password = validated_data.pop('password', None)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        if password:
+            instance.set_password(password)  # Hash the new password
+        instance.save()
+        return instance
+    
