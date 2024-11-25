@@ -7,6 +7,7 @@ import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Login from './components/Login';
 import Signup from './components/Signup';
+import Home from './components/Home';
 
 import './App.css'
 export const UserContext = createContext();
@@ -14,11 +15,14 @@ function App() {
   // Set up state for user data and JWT token
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
-
+  const [email, setEmail] = useState(null);
   // Handle user login
-  const handleLogin = (userData, jwtToken) => {
+  const handleLogin = (userData, jwtToken,email) => {
+    console.log('123',userData);
+    
     setUser(userData);  // Save user data
-    setToken(jwtToken);  // Save the JWT token
+    setToken(jwtToken); 
+    setEmail(email) 
   };
 
   const handleLogout = () => {
@@ -27,6 +31,7 @@ function App() {
   };
 
   const contextValue = {
+    setUser,
     user,
     token,
     login: handleLogin,
@@ -49,8 +54,6 @@ function App() {
   );
 }
 
-const Home = () => {
-  return <h1>Welcome to the Home Page</h1>;
-};
+
 
 export default App;

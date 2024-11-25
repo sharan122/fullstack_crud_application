@@ -39,6 +39,10 @@ def login_view(request):
     if user is not None:
         refresh = RefreshToken.for_user(user)
         return Response({
+            'user':user.username,
+            'email':user.email,
+            'is_active':user.is_active,
+            'is_staff':user.is_staff,
             'access': str(refresh.access_token),
             'refresh': str(refresh),
         }, status=status.HTTP_200_OK)
@@ -67,8 +71,8 @@ def user_details_view(request):
     }
     return Response(user_data, status=status.HTTP_200_OK)
 
-@permission_classes([AllowAny])
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def user_list(request):
     users = Customuser.objects.all()
     serializer = CustomUserSerializer(users, many=True)
@@ -87,9 +91,11 @@ def add_user(request):
 
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])  
+@permission_classes([AllowAny])  
 def delete_user(request, user_id):
+    print(user_id)
     user = get_object_or_404(Customuser, id=user_id)
+    print(user)
     if user == request.user:
         return Response({'message': "You cannot delete your own account."}, status=status.HTTP_400_BAD_REQUEST)
     user.delete()
@@ -116,10 +122,12 @@ def logout_user(request):
     request.user.auth_token.delete()
     return Response({"message": "Successfully logged out."}, status=200)
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def block_user(request):
-    user = request.user  
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def block_user(request,id):
+    print(id)
+    user =  get_object_or_404(Customuser, id=id) 
+    print(user)
     user.is_active = not user.is_active
     user.save()
     status_message = 'blocked' if not user.is_active else 'unblocked'

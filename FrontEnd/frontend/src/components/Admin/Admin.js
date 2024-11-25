@@ -3,19 +3,20 @@ import React, { useState ,useEffect, useContext } from 'react';
 import './Admin.css';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
+import { UserContext } from '../../App';
 const Admin = () => {
-    const navigate = useNavigate()
+  const navigate = useNavigate()
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const {user,setUser} = useContext(UserContext)
-  useEffect(() => {
-    // if (!auth.isAuthenticated || !auth.is_active) {
-    //   navigate('/login');
-    // }
-    if(user.is_staff===false){
-      navigate('/')
-    }
-},[user])
+  const {user} = useContext(UserContext)
+//   useEffect(() => {
+//     // if (!auth.isAuthenticated || !auth.is_active) {
+//     //   navigate('/login');
+//     // }
+//     if(user.is_staff===false){
+//       navigate('/')
+//     }
+// },[user])
     // if (user.accessToken) {
 
     //   const validate = async () =>{
@@ -45,14 +46,16 @@ const Admin = () => {
   
 
   const toggleActiveStatus = async (userId) => {
-    await axios.get(`http://127.0.0.1:8000/block,${userId}`);
+    await axios.get(`http://127.0.0.1:8000/block/${userId}`);
     const userList = await axios.get('http://127.0.0.1:8000/users-list');
     // console.log(userList.data);
     setUsers(userList.data)
   };
 
   const deleteUser = async (userId) => {
-    await axios.delete(`http://127.0.0.1:8000/delete-user,${userId}`)
+    console.log(userId,'id');
+    
+    await axios.delete(`http://127.0.0.1:8000/delete-user/${userId}/`)
     
     const userList = await axios.get('http://127.0.0.1:8000/users-list');
  
@@ -102,6 +105,7 @@ const Admin = () => {
               <td>{user.id}</td>
               <td>{user.username}</td>
               <td>{user.email}</td>
+            
               <td>
                 <button
                   onClick={() => toggleActiveStatus(user.id)}

@@ -16,5 +16,5 @@ urlpatterns = [
     path('delete-user/<int:user_id>/', delete_user, name='delete_user'),
     path('edit-profile/',edit_profile, name='edit_profile'),
     path('logout/', logout_user, name='logout'),
-    path('block/', block_user, name='block_user'),
+    path('block/<int:id>', block_user, name='block_user'),
 ]

@@ -1,6 +1,7 @@
 // src/AddUser.js
 import React, { useState } from 'react';
-import './Create.css';
+import axios  from 'axios';
+import './User_create.css';
 import { useNavigate } from 'react-router-dom';
 const Create = () => {
     const navigate = useNavigate()

@@ -4,28 +4,34 @@ import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../App'; 
 
 const Login = () => {
-  const [email, setEmail] = useState('');
+  const [username, setusername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const navigate = useNavigate();
-  const { login } = useContext(UserContext); 
+  const { login} = useContext(UserContext); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/login', { email, password });
+      const response = await axios.post('http://127.0.0.1:8000/login/', { username, password });
       console.log(response.data);
       
       // Get the user data and token from response
-      const { user, token } = response.data;
-
+      const { user, token ,is_staff,email} = response.data;
+      console.log(user,is_staff,'usr data');
       // Update the context with user data and token
-      login(user, token);
+      login(user, token,email);
 
       alert('Login Successful');
-      navigate('/home');
+      if (is_staff === true) {
+        navigate('/admin')
+      }
+      else{
+
+        navigate('/home');
+      }
     } catch (err) {
       setError('Invalid credentials');
     }
@@ -37,12 +43,12 @@ const Login = () => {
         <h2>Login</h2>
 
         <div className="input-group">
-          <label htmlFor="email">Email</label>
+          <label htmlFor="text">Username</label>
           <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="text"
+            id="username"
+            value={username}
+            onChange={(e) => setusername(e.target.value)}
             required
           />
         </div>

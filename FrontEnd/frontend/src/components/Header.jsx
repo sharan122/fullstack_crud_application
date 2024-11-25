@@ -1,9 +1,13 @@
 // Header.jsx
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../App';
 
 const Header = () => {
     const navigate = useNavigate()
+    const {user} = useContext(UserContext)
+    console.log(user,'sd');
+    
   return (
     <header className="header">
       <div className="logo">MyLogo</div>
@@ -14,7 +18,8 @@ const Header = () => {
         <a href="#contact">Contact</a>
       </nav>
       <div className="cta">
-        <button onClick={()=>navigate('/signup')} className="btn">Sign Up</button>
+        {user ? <button onClick={()=>navigate('/')} className="btn">Logout</button>:<button onClick={()=>navigate('/signup')} className="btn">Sign Up</button>}
+        
       </div>
     </header>
   );
